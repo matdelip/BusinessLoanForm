@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Business Loan Form</title>
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+
+<form id="loanForm">
+    <h1>Business Loan Form</h1>
+    <label for="firstName">First Name: </label>
+    <input type= "text" id="firstName" name="firstName" class="name-field" required>
+    <label for="middleName">Middle Name: </label>
+    <input type= "text" id="middleName" name="middleName" class="name-field" required>
+    <label for="lastName">Last Name: </label>
+    <input type ="text" id="lastName" name="lastName" class="name-field" required>
+    <br>
+    <label for="SSN">Social Security Number: </label>
+    <input type ="number" id="SSN" name="SSN" required>
+    <label for="businessName">Business Name: </label>
+    <input type= "text" id="businessName" name="businessName" required>
+    <label for="number">Phone Number: </label>
+    <input type ="number" id="number" name="number" required>
+    <br>
+    <label for="email">Email: </label>
+    <input type ="email" id="email" name="email" required>
+    <label for="loanAmount">Loan Amount: </label>
+    <input type="number" id="loanAmount" name="loanAmount" required>
+    <label for="annualIncome">Annual Income: </label>
+    <input type="number" id="annualIncome" name="annualIncome" required>
+    <br>
+    <button type="submit"
+            id="submitBtn">Submit</button>
+</form>
+
+</body>
+<script>
+    //functions for validating fields via regex
+    function validateEmail(email){
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailPattern.test(email);
+    }
+    function validatePhoneNumber(phoneNumber){
+        const phonePattern = /^\d{10}$/; //do 10 digit number because America
+        return phonePattern.test(phoneNumber);
+    }
+    function validateAmount(loanAmount){
+        const loanAmountPattern = /^\d+(\.\d{1,2})?$/; // For decimal or whole number values
+        return loanAmountPattern.test(loanAmount);
+    }
+    function validateSSN(ssn){
+        const ssnPattern = /^\d{9}$/;
+        return ssnPattern.test(ssn);
+    }
+    //function to show error messages
+    function showError(field, message){
+        let errorDiv = docuemnt.createElement('div');
+        errorDiv.className = 'error';
+        errorDiv.innerText = message;
+        field.parentNode.insertBefore(errorDiv, field.nextSibling);
+
+    }
+
+    //function to clear previous error message
+    function clearError(){
+        const errorMessages = document.querySelectorAll('.error');
+        errorMessages.forEach(function(errorMessage){
+            errorMessage.remove();
+        })
+    }
+
+    //add Event listener for everything
+    //don't need to validate name fields though make sure fields are filled
+    document.getElementById('loan').addEventListener('submit', function(event){
+
+        let isValid = true;
+
+        //get form fields
+        const firstNameField = document.getElementById('firstName');
+        const lastNameField = document.getElementById('lastName')
+        const emailField = document.getElementById('email');
+        const phoneNumberField = document.getElementById('phoneNumber');
+        const loanAmountField = document.getElementById('loanAmount');
+        const ssnField = document.getElementById('ssn');
+
+        clearError();
+
+        // Checking if name field is filled
+        if (firstNameField.value.trim() === '') {
+            isValid = false;
+            showError(firstNameField, 'First name is required');
+        }
+
+        if (lastNameField.value.trim() === '') {
+            isValid = false;
+            showError(lastNameField, 'Last name is required');
+        }
+        //Validate SSN
+        if (ssnField.value.trim() === '') {
+            isValid = false;
+            showError(ssnField, 'Enter a valid SSN');
+        }
+
+        // Validate email using regular expression
+        if (!validateEmail(emailField.value.trim())) {
+            isValid = false;
+            showError(emailField, 'Please enter a valid email address');
+        }
+
+        // Validate phone number
+        if (!validatePhoneNumber(phoneNumberField.value.trim())) {
+            isValid = false;
+            showError(phoneNumberField, 'Please enter a valid phone number');
+        }
+
+        // Validate loan amount
+        if (!validateLoanAmount(loanAmountField.value.trim())) {
+            isValid = false;
+            showError(loanAmountField, 'Please enter a valid loan amount');
+        }
+
+        // If any field is invalid, prevent form submission
+        if (!isValid) {
+            event.preventDefault();
+        }
+    });
+
+</script>
+</html>
